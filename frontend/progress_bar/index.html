@@ -44,8 +44,9 @@
             background-color: rgb(230, 138, 18);
             display: inline-block;
             height: 100%;
-            transition: all 0.5s linear;
+            transition: all 0.2s linear;
         }
+
         .is-full{
             background-color: aquamarine;
             background-color: chartreuse;
@@ -69,7 +70,8 @@
             color: #000;
             padding: 10px 30px;
             border-radius: 10px;
-            border: 1px solid #333;;
+            border: 1px solid #333;
+            margin: 15px 15px;
         }
     </style>
 </head>
@@ -86,6 +88,7 @@
         </div>
 
         <button id="startButton">Start</button>
+        <button id="stopButton">Pause</button>
 
     </div>
 
@@ -95,23 +98,46 @@
         let barCounter = document.getElementById("barCounter");
         let timerRef = null;
         let count = 0;
+        let paused = false;
 
-        let button = document.getElementById("startButton");
+        let startButton = document.getElementById("startButton");
+        let stopButton = document.getElementById("stopButton");
 
-        button.onclick = function startProgressBar() {
+        startButton.onclick = async function startProgressBar() {
             clearInterval(timerRef);
-            count = 0;
-            sleep
+            paused = false;
+
+            barSlider.classList.remove("is-full");
+            if (count > 0){
+                count = 0;
+                updateSlider(count);
+                await new Promise((resolve, reject) => {
+                    setTimeout(resolve, 750);
+                });
+                console.log("bar cleaned")
+            }
+
             timerRef = setInterval(function () {
-                if (count <= 100) {
-                    barSlider.style.width = count + "%";
-                    barCounter.innerHTML = count + "%";
-                    count++;
-                } else {
-                    clearInterval(timerRef);
-                    barSlider.classList.add("is-full");
+                if (!paused){
+                    if (count <= 100) {
+                        updateSlider(count);
+                        count++;
+                    } else {
+                        clearInterval(timerRef);
+                        barSlider.classList.add("is-full");
+                    }
                 }
-            }, 50)
+            }, 100)
+        }
+
+        stopButton.onclick = async function pauseProgressBar() {
+            paused = !paused;
+        }
+
+
+        function updateSlider(count){
+            barSlider.style.width = count + "%";
+            barCounter.innerHTML = count + "%";
         }
 
 
