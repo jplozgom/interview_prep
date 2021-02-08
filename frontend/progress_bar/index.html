@@ -99,6 +99,7 @@
         let timerRef = null;
         let count = 0;
         let paused = false;
+        let duration = 8;
 
         let startButton = document.getElementById("startButton");
         let stopButton = document.getElementById("stopButton");
@@ -112,7 +113,7 @@
                 count = 0;
                 updateSlider(count);
                 await new Promise((resolve, reject) => {
-                    setTimeout(resolve, 750);
+                    setTimeout(resolve, 1000);
                 });
                 console.log("bar cleaned")
             }
@@ -127,7 +128,7 @@
                         barSlider.classList.add("is-full");
                     }
                 }
-            }, 100)
+            }, duration * 1000 / 100)
         }
 
         stopButton.onclick = async function pauseProgressBar() {
